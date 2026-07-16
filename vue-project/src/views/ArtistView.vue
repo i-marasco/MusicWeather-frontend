@@ -1,47 +1,81 @@
 <template>
   <div>
 
-    <h1>Artists</h1>
+    <header class="page-header">
+      <div>
+        <h1>
+          Artists
+        </h1>
+        <p>
+          The soundtrack of your days, one artist at a time
+        </p>
+      </div>
+
+      <div class="artist-count">
+        <strong>{{ artists.length }}</strong>
+        <span>Artists</span>
+      </div>
+
+    </header>
 
     <div class="sort-buttons">
-      <button @click="sortBy = 'plays'">
+
+      <button @click="changeSort('plays')">
         Plays
+        <span v-if="sortBy === 'plays'">
+      {{ sortDirection === 'asc' ? '↑' : '↓' }}
+    </span>
       </button>
 
-      <button @click="sortBy = 'name'">
+      <button @click="changeSort('name')">
         Name
+        <span v-if="sortBy === 'name'">
+      {{ sortDirection === 'asc' ? '↑' : '↓' }}
+    </span>
       </button>
 
-      <button @click="sortBy = 'date'">
+      <button @click="changeSort('date')">
         First listened
+        <span v-if="sortBy === 'date'">
+      {{ sortDirection === 'asc' ? '↑' : '↓' }}
+    </span>
       </button>
+
     </div>
 
+    <div class="artist-list">
 
-    <p>Total artists: {{ artists.length }}</p>
-    <div class="artist-grid">
       <div
-        v-for="artist in sortedArtists"
+        v-for="(artist, index) in sortedArtists"
         :key="artist.artist_name"
-        class="artist-card"
+        class="artist-row"
       >
-        <h2>🎤 {{ artist.artist_name }}</h2>
 
-        <div class="artist-info">
-          <p>
-            🎧 <strong>Plays:</strong> {{ artist.plays }}
-          </p>
+        <h2>
+          <span v-if="index === 0">🥇</span>
+          <span v-else-if="index === 1">🥈</span>
+          <span v-else-if="index === 2">🥉</span>
+          🎤 {{ artist.artist_name }}
+        </h2>
 
-          <p>
-            📅 <strong>First listened:</strong>
-            {{ formatDate(artist.listened_at) }}
-          </p>
+        <div class="plays-bar-container">
+          <div
+            class="plays-bar"
+            :style="{ width: getPlayPercentage(artist.plays) + '%' }"
+          >
+          </div>
         </div>
+
+        <p>
+          🎧 {{ artist.plays }} plays
+        </p>
+
+        <p>
+          📅 First listened:
+          {{ formatDate(artist.listened_at) }}
+        </p>
       </div>
     </div>
-
-
-
   </div>
 </template>
 
@@ -52,6 +86,7 @@ import { ref, computed, onMounted } from "vue";
 import { getArtists } from "../api/artist";
 const artists = ref([]);
 const sortBy = ref("plays");
+const sortDirection = ref("desc");
 
 const fetchArtists = async () => {
   try {
@@ -59,6 +94,23 @@ const fetchArtists = async () => {
     artists.value = res.data.artists;
   } catch (error) {
     console.error(error);
+  }
+};
+
+const changeSort = (field) => {
+  if (sortBy.value === field) {
+    // Same button clicked: invert direction
+    sortDirection.value =
+      sortDirection.value === "asc"
+        ? "desc"
+        : "asc";
+  } else {
+    // New button clicked
+    sortBy.value = field;
+
+    // Default direction
+    sortDirection.value =
+      field === "name" ? "asc" : "desc";
   }
 };
 
@@ -70,26 +122,38 @@ const formatDate = (date) => {
   });
 };
 
+const getPlayPercentage = (plays) => {
+  const maxPlays = Math.max(
+    ...artists.value.map(a => a.plays)
+  );
+
+  return (plays / maxPlays) * 100;
+};
+
 const sortedArtists = computed(() => {
   const copy = [...artists.value];
 
-  if (sortBy.value === "plays") {
-    copy.sort((a, b) => b.plays - a.plays);
-  }
+  copy.sort((a, b) => {
+    let result = 0;
+    if (sortBy.value === "plays") {
+      result = a.plays - b.plays;
+    }
+    if (sortBy.value === "name") {
+      result = a.artist_name.localeCompare(
+        b.artist_name
+      );
+    }
 
-  if (sortBy.value === "name") {
-    copy.sort((a, b) =>
-      a.artist_name.localeCompare(b.artist_name)
-    );
-  }
-
-  if (sortBy.value === "date") {
-    copy.sort(
-      (a, b) =>
+    if (sortBy.value === "date") {
+      result =
         new Date(a.listened_at) -
-        new Date(b.listened_at)
-    );
-  }
+        new Date(b.listened_at);
+    }
+
+    return sortDirection.value === "asc"
+      ? result
+      : -result;
+  });
 
   return copy;
 });
@@ -100,33 +164,150 @@ onMounted(fetchArtists);
 
 <style scoped>
 
-.artist-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 25px;
+  background: linear-gradient(
+    135deg,
+    #42b883,
+    #35495e
+  );
+
+  border-radius: 16px;
+  color: white;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.page-header p {
+  margin-top: 8px;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+}
+
+.artist-count {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255,255,255,0.2);
+  padding: 15px 25px;
+  border-radius: 12px;
+}
+
+.artist-count strong {
+  font-size: 2rem;
+}
+
+.artist-count span {
+  font-size: 0.9rem;
+}
+
+/* -------------------------
+   Sorting buttons
+------------------------- */
+
+.sort-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.sort-buttons button {
+  border: none;
+  padding: 8px 18px;
+  border-radius: 20px;
+  background: #eeeeee;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.sort-buttons button:hover {
+  background: #ddd;
+}
+
+.sort-buttons button.active {
+  background: #1db954;
+  color: white;
+}
+
+
+/* -------------------------
+   Artist list
+------------------------- */
+
+.artist-list {
   margin-top: 20px;
 }
 
-.artist-card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.artist-row {
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  background: white;
+  border-radius: 14px;
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.artist-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+.artist-row:hover {
+  transform: translateX(5px);
+  box-shadow:
+    0 5px 12px rgba(0,0,0,0.12);
 }
 
-.artist-card h2 {
-  margin-bottom: 15px;
+
+/* -------------------------
+   Artist information
+------------------------- */
+
+.artist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.artist-header h2 {
+  margin: 0;
   font-size: 1.2rem;
 }
 
-.artist-info p {
-  margin: 8px 0;
+.artist-row p {
+  margin: 5px 0;
+  color: #555;
+}
+
+
+/* -------------------------
+   Plays visualization
+------------------------- */
+
+.plays-bar-container {
+  height: 12px;
+  background: #e5e5e5;
+  border-radius: 10px;
+  margin: 15px 0;
+}
+
+.plays-bar {
+  height: 100%;
+  background: #1db954;
+  border-radius: 10px;
+  transition: width 0.3s ease;
 }
 
 </style>
