@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory} from "vue-router";
 import WeatherView from "../views/WeatherView.vue";
 import ArtistView from "../views/ArtistView.vue";
+import HomeView from "../views/HomeView.vue";
 
 const routes = [
   {
@@ -14,6 +15,12 @@ const routes = [
     name: "artist",
   component: ArtistView
 },
+
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: HomeView
+  },
 
 ];
 
