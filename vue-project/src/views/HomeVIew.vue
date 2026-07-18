@@ -34,6 +34,20 @@
       </div>
 
     </section>
+
+    <section class="highlight-card" v-if="dashboard">
+      <h2>🎤 Top Artist</h2>
+      <div class="top-artist">
+        <h3>
+          {{ dashboard.top_artist.artist_name }}
+        </h3>
+        <p>
+          {{ dashboard.top_artist.plays }} plays
+        </p>
+      </div>
+    </section>
+
+
   </div>
 </template>
 
@@ -109,6 +123,36 @@ onMounted(fetchDashboard);
 
 .stat-card strong {
   font-size: 2rem;
+}
+
+.highlight-card {
+  margin-top: 40px;
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  box-shadow:
+    0 2px 10px rgba(0,0,0,0.08);
+}
+
+.highlight-card h2 {
+  margin-bottom: 20px;
+}
+
+.top-artist {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-artist h3 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.top-artist p {
+  font-size: 1.2rem;
+  color: #1db954;
+  font-weight: bold;
 }
 
 </style>
