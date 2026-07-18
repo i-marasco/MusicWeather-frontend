@@ -3,15 +3,14 @@
 
     <h1>Weather Dashboard</h1>
 
-
     <section class="card">
       <h2>Latest Weather</h2>
 
       <div v-if="latestWeather">
-        <p>🌡 Temperature: {{ latestWeather.TEMPERATURE }} °C</p>
-        <p>💧 Humidity: {{ latestWeather.HUMIDITY }} %</p>
-        <p>💨 Wind: {{ latestWeather.WIND_SPEED }} km/h</p>
-        <p>📍 City: {{ latestWeather.CITY }}</p>
+        <p>🌡 Temperature: {{ latestWeather.temperature }} °C</p>
+        <p>💧 Humidity: {{ latestWeather.humidity }} %</p>
+        <p>💨 Wind: {{ latestWeather.wind_speed }} km/h</p>
+        <p>📍 City: {{ latestWeather.city }}</p>
       </div>
 
       <p v-else>
@@ -26,11 +25,11 @@
       <ul>
         <li
           v-for="w in weather.slice(0, 10)"
-          :key="w.OBSERVED_AT"
+          :key="w.observed_at"
         >
-          {{ w.OBSERVED_AT }}
+          {{ w.observed_at }}
           -
-          {{ w.TEMPERATURE }} °C
+          {{ w.temperature }} °C
         </li>
       </ul>
 
