@@ -47,6 +47,25 @@
       </div>
     </section>
 
+    <section class="highlight-card" v-if="dashboard">
+      <h2>🌤 Latest Weather</h2>
+      <div class="weather-info">
+        <div>
+          <h3>
+            {{ dashboard.latest_weather.city }}
+          </h3>
+
+          <p>
+            Current temperature
+          </p>
+        </div>
+
+        <strong>
+          {{ dashboard.latest_weather.temperature }} °C
+        </strong>
+      </div>
+
+    </section>
 
   </div>
 </template>
@@ -153,6 +172,28 @@ onMounted(fetchDashboard);
   font-size: 1.2rem;
   color: #1db954;
   font-weight: bold;
+}
+
+.weather-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.weather-info h3 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.weather-info p {
+  margin-top: 5px;
+  color: #777;
+}
+
+.weather-info strong {
+  font-size: 2.5rem;
+  color: #3498db;
+
 }
 
 </style>
