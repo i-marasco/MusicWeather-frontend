@@ -1,3 +1,5 @@
+<script setup>
+</script>
 <template>
   <div class="app">
     <nav class="navbar">
@@ -13,8 +15,12 @@
       <router-link to="/weather">
         🌤️ Weather
       </router-link>
-    </nav>
 
+      <router-link to="/activity">
+        🎧 Activity
+      </router-link>
+    </nav>
+    
     <router-view />
 
   </div>
