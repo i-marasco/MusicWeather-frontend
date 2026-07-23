@@ -2,6 +2,8 @@
 
   <div class="heatmap-wrapper">
 
+    <div class="heatmap-content">
+
     <div class="weekday-labels">
 
       <span></span>
@@ -67,7 +69,31 @@
       </strong>
       <br>
       📅 {{ tooltip.day.day }}
+
+
+      </div>
     </div>
+
+    <div class="legend">
+
+      <span>Less</span>
+
+      <div class="legend-colors">
+
+        <div class="legend-box level-0"></div>
+        <div class="legend-box level-1"></div>
+        <div class="legend-box level-2"></div>
+        <div class="legend-box level-3"></div>
+        <div class="legend-box level-4"></div>
+
+      </div>
+
+      <span>More</span>
+
+
+    </div>
+
+
 
   </div>
 
@@ -76,6 +102,7 @@
 
 <script setup>
 import { computed, ref } from "vue";
+import "../assets/heatmap.css";
 
 const props = defineProps({
   calendar: {
@@ -186,8 +213,8 @@ const showTooltip = (event, day) => {
   tooltip.value = {
     visible: true,
     day: day,
-    x: event.pageX + 10,
-    y: event.pageY + 10
+    x: event.clientX + 10,
+    y: event.clientY + 10
   };
 };
 
@@ -200,8 +227,19 @@ const hideTooltip = () => {
 
 <style scoped>
 
+
+
 .heatmap-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.heatmap-content {
   display: flex;
+}
+
+.heatmap-container {
+  width: fit-content;
 }
 
 .weekday-labels {
@@ -230,26 +268,6 @@ const hideTooltip = () => {
   border-radius: 4px;
 }
 
-.level-0 {
-  background: #eeeeee;
-}
-
-.level-1 {
-  background: #b7e4c7;
-}
-
-.level-2 {
-  background: #74c69d;
-}
-
-.level-3 {
-  background: #40916c;
-}
-
-.level-4 {
-  background: #1b4332;
-}
-
 .month-labels {
   display: flex;
   font-size: 12px;
@@ -275,6 +293,27 @@ const hideTooltip = () => {
   pointer-events: none;
   box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   z-index: 1000;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #666;
+}
+
+.legend-colors {
+  display: flex;
+  gap: 4px;
+}
+
+.legend-box {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
 }
 
 </style>

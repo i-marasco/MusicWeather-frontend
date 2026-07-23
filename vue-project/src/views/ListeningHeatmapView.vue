@@ -12,7 +12,6 @@
 
     </div>
 
-
     <ListeningHeatmap
       :calendar="calendar"
     />
@@ -30,20 +29,14 @@ import { ref, onMounted } from "vue";
 import ListeningHeatmap from "../components/ListeningHeatmap.vue";
 import { getListeningActivity } from "../api/activity";
 
-
 const calendar = ref([]);
-
 
 const fetchActivity = async () => {
 
   try {
-
     const response = await getListeningActivity();
-
     console.log(response.data);
-
     calendar.value = response.data.calendar;
-
 
   } catch(error) {
 
@@ -56,17 +49,9 @@ const fetchActivity = async () => {
 
 };
 
-
 onMounted(fetchActivity);
 
-
 </script>
-
-
-
-
-
-
 
 <style scoped>
 
@@ -75,7 +60,7 @@ onMounted(fetchActivity);
 }
 
 .page-header {
-  margin-bottom: 40px;
+  margin-bottom: 25px;
 }
 
 .page-header h1 {
