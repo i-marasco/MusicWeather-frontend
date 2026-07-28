@@ -1,6 +1,14 @@
 <template>
-  <div>
+  <!--
+  Artists view.
 
+  Displays all listened artists with:
+  - Total play count.
+  - First listening date.
+  - A proportional play bar.
+  - Sorting by plays, artist name or first listening date.
+-->
+  <div>
     <header class="page-header">
       <div>
         <h1>
@@ -19,7 +27,6 @@
     </header>
 
     <div class="sort-buttons">
-
       <button @click="changeSort('plays')">
         Plays
         <span v-if="sortBy === 'plays'">
@@ -42,9 +49,7 @@
       </button>
 
     </div>
-
     <div class="artist-list">
-
       <div
         v-for="(artist, index) in sortedArtists"
         :key="artist.artist_name"
@@ -69,7 +74,6 @@
         <p>
           🎧 {{ artist.plays }} plays
         </p>
-
         <p>
           📅 First listened:
           {{ formatDate(artist.listened_at) }}
@@ -88,6 +92,9 @@ const artists = ref([]);
 const sortBy = ref("plays");
 const sortDirection = ref("desc");
 
+// -----------------------------------------------------
+// API
+// -----------------------------------------------------
 const fetchArtists = async () => {
   try {
     const res = await getArtists();
@@ -97,6 +104,9 @@ const fetchArtists = async () => {
   }
 };
 
+// -----------------------------------------------------
+// Sorting
+// -----------------------------------------------------
 const changeSort = (field) => {
   if (sortBy.value === field) {
     // Same button clicked: invert direction
@@ -114,6 +124,9 @@ const changeSort = (field) => {
   }
 };
 
+// -----------------------------------------------------
+// Formatting
+// -----------------------------------------------------
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -122,6 +135,9 @@ const formatDate = (date) => {
   });
 };
 
+// -----------------------------------------------------
+// Helper functions
+// -----------------------------------------------------
 const getPlayPercentage = (plays) => {
   const maxPlays = Math.max(
     ...artists.value.map(a => a.plays)
@@ -130,6 +146,9 @@ const getPlayPercentage = (plays) => {
   return (plays / maxPlays) * 100;
 };
 
+// -----------------------------------------------------
+// Computed properties
+// -----------------------------------------------------
 const sortedArtists = computed(() => {
   const copy = [...artists.value];
 
@@ -159,8 +178,8 @@ const sortedArtists = computed(() => {
 });
 
 onMounted(fetchArtists);
-
 </script>
+
 
 <style scoped>
 
@@ -191,12 +210,6 @@ onMounted(fetchArtists);
   font-size: 1.1rem;
 }
 
-.subtitle {
-  color: #666;
-  font-size: 1.1rem;
-  margin-bottom: 25px;
-}
-
 .artist-count {
   display: flex;
   flex-direction: column;
@@ -214,10 +227,9 @@ onMounted(fetchArtists);
   font-size: 0.9rem;
 }
 
-/* -------------------------
+/* -----------------------------------------------------
    Sorting buttons
-------------------------- */
-
+----------------------------------------------------- */
 .sort-buttons {
   display: flex;
   gap: 10px;
@@ -243,10 +255,9 @@ onMounted(fetchArtists);
   color: white;
 }
 
-
-/* -------------------------
+/* -----------------------------------------------------
    Artist list
-------------------------- */
+----------------------------------------------------- */
 
 .artist-list {
   margin-top: 20px;
@@ -271,9 +282,9 @@ onMounted(fetchArtists);
 }
 
 
-/* -------------------------
+/* -----------------------------------------------------
    Artist information
-------------------------- */
+----------------------------------------------------- */
 
 .artist-header {
   display: flex;
@@ -292,9 +303,9 @@ onMounted(fetchArtists);
 }
 
 
-/* -------------------------
+/* -----------------------------------------------------
    Plays visualization
-------------------------- */
+----------------------------------------------------- */
 
 .plays-bar-container {
   height: 12px;

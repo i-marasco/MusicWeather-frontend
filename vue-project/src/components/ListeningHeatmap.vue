@@ -1,9 +1,15 @@
 <template>
+  <!--
+    Listening activity heatmap.
 
+    Displays the user's listening history as a GitHub-style heatmap:
+    - Columns represent calendar weeks grouped by month.
+    - Rows represent the days of the week (Monday–Sunday).
+    - Cell colour indicates the number of songs listened on a given day.
+    - Hovering over a cell displays a tooltip with the date and play count.
+  -->
   <div class="heatmap-wrapper">
-
     <div class="heatmap-content">
-
     <div class="weekday-labels">
 
       <span></span>
@@ -49,9 +55,7 @@
             @mouseleave="hideTooltip"
           >
           </div>
-
         </div>
-
       </div>
     </div>
 
@@ -75,9 +79,7 @@
     </div>
 
     <div class="legend">
-
       <span>Less</span>
-
       <div class="legend-colors">
 
         <div class="legend-box level-0"></div>
@@ -87,23 +89,35 @@
         <div class="legend-box level-4"></div>
 
       </div>
-
       <span>More</span>
-
-
     </div>
-
-
-
   </div>
 
 </template>
 
 
 <script setup>
+/*
+-----------------------------------------------------
+Heatmap data preparation
+-----------------------------------------------------
+
+Transforms the calendar data received from the API into
+the structure required by the heatmap.
+
+The component:
+- Groups days into calendar weeks.
+- Aligns weeks from Monday to Sunday.
+- Computes the month labels.
+- Maps the number of plays to a colour intensity.
+- Manages the tooltip state and positioning.
+*/
 import { computed, ref } from "vue";
 import "../assets/heatmap.css";
 
+// -----------------------------------------------------
+// Props
+// -----------------------------------------------------
 const props = defineProps({
   calendar: {
     type: Array,
@@ -111,7 +125,9 @@ const props = defineProps({
   }
 });
 
-
+// -----------------------------------------------------
+// Computed properties
+// -----------------------------------------------------
 const weeks = computed(() => {
   const result = [];
   let week = Array(7).fill(null);
@@ -120,16 +136,7 @@ const weeks = computed(() => {
     const date = new Date(day.day);
     let weekday = date.getDay();
 
-    // Convert JavaScript:
-    // Sunday = 0
-    // Monday = 1
-    //
-    // Into:
-    // Monday = 0
-    // Tuesday = 1
-    // ...
-    // Sunday = 6
-
+    // Monday = 0, Tuesday = 1, ..., Sunday = 6
     weekday = weekday === 0 ? 6 : weekday - 1;
     week[weekday] = day;
 
@@ -148,6 +155,42 @@ const weeks = computed(() => {
   return result;
 });
 
+
+const months = computed(() => {
+  const result = [];
+  let currentMonth = null;
+
+  weeks.value.forEach((week, index) => {
+    const firstDay = week.find(day => day !== null);
+    if (!firstDay) {
+      return;
+    }
+
+    const date = new Date(firstDay.day);
+    const month = date.toLocaleString(
+      "default",
+      {
+        month: "short"
+      }
+    );
+
+    if (month !== currentMonth) {
+      result.push({
+        name: month,
+        weeks: 1
+      });
+
+      currentMonth = month;
+    } else {
+      result[result.length - 1].weeks++;
+    }
+  });
+  return result;
+});
+
+// -----------------------------------------------------
+// Helper functions
+// -----------------------------------------------------
 const getLevel = (plays) => {
   if (plays === 0) {
     return "level-0";
@@ -165,43 +208,9 @@ const getLevel = (plays) => {
   return "level-4";
 };
 
-const months = computed(() => {
-
-  const result = [];
-  let currentMonth = null;
-
-  weeks.value.forEach((week, index) => {
-
-    const firstDay = week.find(day => day !== null);
-
-    if (!firstDay) {
-      return;
-    }
-
-    const date = new Date(firstDay.day);
-
-    const month = date.toLocaleString(
-      "default",
-      {
-        month: "short"
-      }
-    );
-
-    if (month !== currentMonth) {
-      result.push({
-        name: month,
-        weeks: 1
-      });
-
-      currentMonth = month;
-
-    } else {
-      result[result.length - 1].weeks++;
-    }
-  });
-  return result;
-});
-
+// -----------------------------------------------------
+// Tooltip
+// -----------------------------------------------------
 const tooltip = ref({
   visible: false,
   day: null,
@@ -226,9 +235,6 @@ const hideTooltip = () => {
 
 
 <style scoped>
-
-
-
 .heatmap-wrapper {
   display: inline-flex;
   flex-direction: column;

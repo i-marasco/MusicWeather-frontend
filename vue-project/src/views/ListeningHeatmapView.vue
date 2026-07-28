@@ -1,15 +1,17 @@
 <template>
+  <!--
+  Listening activity page.
+
+  Loads the user's listening history and displays it
+  through the ListeningHeatmap component.
+-->
 
   <div class="activity">
-
     <div class="page-header">
-
       <h1>🎧 Listening Activity</h1>
-
       <p>
         Explore your listening habits over time.
       </p>
-
     </div>
 
     <ListeningHeatmap
@@ -21,21 +23,20 @@
 </template>
 
 
-
-
 <script setup>
-
 import { ref, onMounted } from "vue";
 import ListeningHeatmap from "../components/ListeningHeatmap.vue";
 import { getListeningActivity } from "../api/activity";
 
 const calendar = ref([]);
 
+// -----------------------------------------------------
+// API
+// -----------------------------------------------------
 const fetchActivity = async () => {
 
   try {
     const response = await getListeningActivity();
-    console.log(response.data);
     calendar.value = response.data.calendar;
 
   } catch(error) {
@@ -44,17 +45,14 @@ const fetchActivity = async () => {
       "Activity error:",
       error
     );
-
   }
-
 };
 
 onMounted(fetchActivity);
-
 </script>
 
-<style scoped>
 
+<style scoped>
 .activity {
   padding: 30px;
 }

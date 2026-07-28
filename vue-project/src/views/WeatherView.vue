@@ -1,11 +1,16 @@
 <template>
-  <div class="dashboard">
+  <!--
+  Weather view.
 
+  Displays:
+  - Latest weather observation.
+  - Historical weather data retrieved from the backend.
+-->
+  <div class="dashboard">
     <h1>Weather Dashboard</h1>
 
     <section class="card">
       <h2>Latest Weather</h2>
-
       <div v-if="latestWeather">
         <p>🌡 Temperature: {{ latestWeather.temperature }} °C</p>
         <p>💧 Humidity: {{ latestWeather.humidity }} %</p>
@@ -18,10 +23,8 @@
       </p>
     </section>
 
-
     <section class="card">
       <h2>Historical Data</h2>
-
       <ul>
         <li
           v-for="w in weather.slice(0, 10)"
@@ -32,10 +35,7 @@
           {{ w.temperature }} °C
         </li>
       </ul>
-
     </section>
-
-
   </div>
 </template>
 
@@ -49,16 +49,15 @@ const weather = ref([]);
 const loading = ref(true);
 const latestWeather = ref(null);
 
+// -----------------------------------------------------
+// API
+// -----------------------------------------------------
 const fetchWeather = async () => {
-  console.log("fetchWeather started");
 
   try {
     const res = await getWeatherHistory();
 
-    console.log("API response:", res.data);
-
     weather.value = res.data;
-
     latestWeather.value = res.data[0];
 
   } catch (error) {
@@ -73,7 +72,6 @@ onMounted(fetchWeather);
 
 
 <style scoped>
-
 .dashboard {
   padding: 20px;
 }

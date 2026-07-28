@@ -1,4 +1,13 @@
 <template>
+  <!--
+  Dashboard view.
+
+  Displays an overview of the MusicWeather project,
+  including:
+  - Total tracks, artists and genres.
+  - Most listened artist.
+  - Latest recorded weather information.
+-->
   <div class="dashboard">
 
     <header class="hero">
@@ -54,7 +63,6 @@
           <h3>
             {{ dashboard.latest_weather.city }}
           </h3>
-
           <p>
             Current temperature
           </p>
@@ -64,9 +72,7 @@
           {{ dashboard.latest_weather.temperature }} °C
         </strong>
       </div>
-
     </section>
-
   </div>
 </template>
 
@@ -78,6 +84,9 @@ import { getDashboard } from "../api/dashboard";
 
 const dashboard = ref(null);
 
+// -----------------------------------------------------
+// API
+// -----------------------------------------------------
 const fetchDashboard = async () => {
   try {
     const response = await getDashboard();
@@ -94,11 +103,16 @@ onMounted(fetchDashboard);
 </script>
 
 <style scoped>
-
+/* -----------------------------------------------------
+   Layout
+----------------------------------------------------- */
 .dashboard {
   padding: 30px;
 }
 
+/* -----------------------------------------------------
+   Hero
+----------------------------------------------------- */
 .hero {
   text-align: center;
   margin-bottom: 40px;
@@ -114,6 +128,9 @@ onMounted(fetchDashboard);
   font-size: 1.2rem;
 }
 
+/* -----------------------------------------------------
+   Statistics cards
+----------------------------------------------------- */
 .stats {
   display: flex;
   justify-content: center;
@@ -144,6 +161,10 @@ onMounted(fetchDashboard);
   font-size: 2rem;
 }
 
+
+/* -----------------------------------------------------
+   Highlight cards
+----------------------------------------------------- */
 .highlight-card {
   margin-top: 40px;
   padding: 30px;
@@ -157,6 +178,9 @@ onMounted(fetchDashboard);
   margin-bottom: 20px;
 }
 
+/* -----------------------------------------------------
+   Top artist
+----------------------------------------------------- */
 .top-artist {
   display: flex;
   justify-content: space-between;
@@ -174,6 +198,9 @@ onMounted(fetchDashboard);
   font-weight: bold;
 }
 
+/* -----------------------------------------------------
+   Weather
+----------------------------------------------------- */
 .weather-info {
   display: flex;
   justify-content: space-between;
@@ -193,7 +220,6 @@ onMounted(fetchDashboard);
 .weather-info strong {
   font-size: 2.5rem;
   color: #3498db;
-
 }
 
 </style>
