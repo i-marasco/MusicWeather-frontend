@@ -57,6 +57,25 @@
       </p>
     </section>
 
+
+    <div class="weather-filter">
+      <label for="weather-date">Search date:</label>
+
+      <input
+        id="weather-date"
+        type="date"
+        v-model="selectedDate"
+      >
+
+      <button
+        v-if="selectedDate"
+        class="clear-filter-button"
+        @click="selectedDate = null"
+      >
+        Clear filter
+      </button>
+    </div>
+
     <section class="card">
       <h2>Historical Data</h2>
 
@@ -73,8 +92,7 @@
 
         <tbody>
         <tr
-          v-for="w in dailyWeather.slice(0, 10)"
-          :key="w.day"
+          v-for="w in filteredWeather"
         >
           <td>{{ w.day }}</td>
           <td>{{ weatherCodes[w.most_common_weather_code] || "❓ Unknown" }}</td>
@@ -89,12 +107,20 @@
         </tbody>
       </table>
 
+      <button
+        v-if="!selectedDate && visibleRows < dailyWeather.length"
+        class="show-more-button"
+        @click="visibleRows += 10"
+      >
+        Show more
+      </button>
+
     </section>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import {getWeatherHistory, getWeatherDaily} from "../api/weather";
 import weatherCodes from "../assets/weatherCodes";
 
@@ -104,6 +130,8 @@ const weather = ref([]);
 const dailyWeather = ref([]);
 const loading = ref(true);
 const latestWeather = ref(null);
+const visibleRows = ref(10);
+const selectedDate = ref(null);
 
 
 // -----------------------------------------------------
@@ -126,6 +154,16 @@ const fetchWeather = async () => {
     loading.value = false;
   }
 };
+
+const filteredWeather = computed(() => {
+  if (!selectedDate.value) {
+    return dailyWeather.value.slice(0, visibleRows.value);
+  }
+
+  return dailyWeather.value.filter(
+    weather => weather.day === selectedDate.value
+  );
+});
 
 onMounted(fetchWeather);
 </script>
@@ -232,4 +270,68 @@ th {
   color: #777;
   font-size: 13px;
 }
+
+button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 22px;
+
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+button:hover {
+  background-color: #e9e9e9;
+  border-color: #aaa;
+}
+
+.show-more-button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 22px;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.show-more-button:hover {
+  background-color: #e9e9e9;
+  border-color: #aaa;
+}
+
+.weather-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.weather-filter label {
+  font-weight: 600;
+}
+
+.weather-filter input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.clear-filter-button {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
 </style>
+
