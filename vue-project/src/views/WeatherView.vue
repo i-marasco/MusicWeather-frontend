@@ -10,13 +10,46 @@
   <div class="dashboard">
     <h1>Weather Dashboard</h1>
 
-    <section class="card">
-      <h2>Latest Weather</h2>
+    <section class="weather-card">
       <div v-if="latestWeather">
-        <p>🌡 Temperature: {{ latestWeather.temperature }} °C</p>
-        <p>💧 Humidity: {{ latestWeather.humidity }} %</p>
-        <p>💨 Wind: {{ latestWeather.wind_speed }} km/h</p>
-        <p>📍 City: {{ latestWeather.city }}</p>
+
+        <div class="weather-header">
+          <div>
+            <h2>Latest Weather</h2>
+            <p class="weather-city">📍 {{ latestWeather.city }}</p>
+          </div>
+
+          <div class="weather-condition">
+            {{ weatherCodes[latestWeather.weather_code] || "❓ Unknown" }}
+          </div>
+        </div>
+
+        <div class="weather-main">
+
+          <div class="temperature">
+            🌡️ {{ latestWeather.temperature }}°C
+          </div>
+
+          <div class="weather-details">
+            <div>
+              <span>💧</span>
+              <strong>{{ latestWeather.humidity }}%</strong>
+              <small>Humidity</small>
+            </div>
+
+            <div>
+              <span>💨</span>
+              <strong>{{ latestWeather.wind_speed }} km/h</strong>
+              <small>Wind</small>
+            </div>
+          </div>
+
+        </div>
+
+        <p class="weather-updated">
+          Updated: {{ latestWeather.observed_at }}
+        </p>
+
       </div>
 
       <p v-else>
@@ -130,4 +163,73 @@ th {
   font-weight: 600;
 }
 
+.weather-card {
+  background: #f5f5f5;
+  padding: 25px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+.weather-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+}
+
+.weather-header h2 {
+  margin: 0 0 5px;
+}
+
+.weather-city {
+  margin: 0;
+  color: #666;
+}
+
+.weather-condition {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.weather-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.temperature {
+  font-size: 42px;
+  font-weight: 600;
+}
+
+.weather-details {
+  display: flex;
+  gap: 35px;
+}
+
+.weather-details div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.weather-details span {
+  font-size: 20px;
+}
+
+.weather-details strong {
+  font-size: 18px;
+}
+
+.weather-details small {
+  color: #777;
+}
+
+.weather-updated {
+  margin: 25px 0 0;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  color: #777;
+  font-size: 13px;
+}
 </style>
