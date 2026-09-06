@@ -1,7 +1,8 @@
 <template>
   <!--
+  -------------------------------------------------------------------------------------
   Dashboard view.
-
+  -------------------------------------------------------------------------------------
   Displays an overview of the MusicWeather project,
   including:
   - Total tracks, artists and genres.

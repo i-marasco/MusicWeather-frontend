@@ -1,12 +1,13 @@
 <template>
   <!--
-    Listening activity heatmap.
-
-    Displays the user's listening history as a GitHub-style heatmap:
-    - Columns represent calendar weeks grouped by month.
-    - Rows represent the days of the week (Monday–Sunday).
-    - Cell colour indicates the number of songs listened on a given day.
-    - Hovering over a cell displays a tooltip with the date and play count.
+  -------------------------------------------------------------------------------------
+  Listening activity heatmap.
+  -------------------------------------------------------------------------------------
+  Displays the user's listening history as a GitHub-style heatmap:
+  - Columns represent calendar weeks grouped by month.
+  - Rows represent the days of the week (Monday–Sunday).
+  - Cell colour indicates the number of songs listened on a given day.
+  - Hovering over a cell displays a tooltip with the date and play count.
   -->
   <div class="heatmap-wrapper">
     <div class="heatmap-content">

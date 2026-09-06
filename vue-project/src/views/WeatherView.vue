@@ -1,7 +1,8 @@
 <template>
   <!--
+  -------------------------------------------------------------------------------------
   Weather view.
-
+  -------------------------------------------------------------------------------------
   Displays:
   - Latest weather observation.
   - Historical weather data retrieved from the backend.

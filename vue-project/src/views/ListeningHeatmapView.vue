@@ -1,7 +1,8 @@
 <template>
   <!--
+  -------------------------------------------------------------------------------------
   Listening activity page.
-
+  -------------------------------------------------------------------------------------
   Loads the user's listening history and displays it
   through the ListeningHeatmap component.
 -->
