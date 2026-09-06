@@ -26,29 +26,52 @@
 
     <section class="card">
       <h2>Historical Data</h2>
-      <ul>
-        <li
-          v-for="w in weather.slice(0, 10)"
-          :key="w.observed_at"
+
+      <table>
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Weather</th>
+          <th>Temperature</th>
+          <th>Humidity</th>
+          <th>Wind</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr
+          v-for="w in dailyWeather.slice(0, 10)"
+          :key="w.day"
         >
-          {{ w.observed_at }}
-          -
-          {{ w.temperature }} °C
-        </li>
-      </ul>
+          <td>{{ w.day }}</td>
+          <td>{{ weatherCodes[w.most_common_weather_code] || "❓ Unknown" }}</td>
+          <td>
+            {{ w.avg_temperature }} °C
+            ({{ w.min_temperature }} – {{ w.max_temperature }} °C)
+          </td>
+          <td>{{ w.avg_humidity }} %</td>
+          <td>{{ w.avg_wind_speed }} km/h</td>
+
+        </tr>
+        </tbody>
+      </table>
+
     </section>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getWeatherHistory } from "../api/weather";
+import {getWeatherHistory, getWeatherDaily} from "../api/weather";
+import weatherCodes from "../assets/weatherCodes";
 
 console.log("WeatherView loaded");
 
 const weather = ref([]);
+const dailyWeather = ref([]);
 const loading = ref(true);
 const latestWeather = ref(null);
+
 
 // -----------------------------------------------------
 // API
@@ -56,10 +79,13 @@ const latestWeather = ref(null);
 const fetchWeather = async () => {
 
   try {
-    const res = await getWeatherHistory();
+    const history = await getWeatherHistory();
+    const daily = await getWeatherDaily();
 
-    weather.value = res.data;
-    latestWeather.value = res.data[0];
+    weather.value = history.data;
+    dailyWeather.value = daily.data;
+
+    latestWeather.value = history.data[0];
 
   } catch (error) {
     console.error("API error:", error);
@@ -86,6 +112,22 @@ onMounted(fetchWeather);
 
 h1 {
   margin-bottom: 30px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  font-weight: 600;
 }
 
 </style>
