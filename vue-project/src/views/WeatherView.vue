@@ -57,6 +57,7 @@
       </p>
     </section>
 
+    <WeatherTemperatureChart :weather="dailyWeather" />
 
     <div class="weather-filter">
       <label for="weather-date">Search date:</label>
@@ -123,6 +124,7 @@
 import { ref, onMounted, computed } from "vue";
 import {getWeatherHistory, getWeatherDaily} from "../api/weather";
 import weatherCodes from "../assets/weatherCodes";
+import WeatherTemperatureChart from "../components/WeatherTemperatureChart.vue";
 
 console.log("WeatherView loaded");
 
