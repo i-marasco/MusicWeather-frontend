@@ -237,8 +237,9 @@ const hideTooltip = () => {
 
 <style scoped>
 .heatmap-wrapper {
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .heatmap-content {
